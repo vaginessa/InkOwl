@@ -1,9 +1,13 @@
 package inkowl.com.inkowl;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.ListFragment;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.res.Resources;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.Html;
@@ -54,13 +58,6 @@ public class HashtagsFragment extends ListFragment {
         hashtagsAdapter = new HashtagAdapter(getActivity(), mHashtags);
 
         setListAdapter(hashtagsAdapter);
-
-//        getActivity().getResources().getXml(R.xml)
-    }
-
-    @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
         new GetTags().execute("");
     }
 
@@ -73,8 +70,14 @@ public class HashtagsFragment extends ListFragment {
             throw new ClassCastException(activity.toString()
                     + " must implement OnFragmentInteractionListener");
         }
-//        getListView().setDivider(new ColorDrawable(Color.BLACK));
-//        getListView().setDividerHeight(2);
+    }
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+
+        getListView().setDivider(new ColorDrawable(Color.BLACK));
+        getListView().setDividerHeight(2);
     }
 
     @Override
@@ -90,12 +93,13 @@ public class HashtagsFragment extends ListFragment {
         if (mListener != null) {
             // Notify the active callbacks interface (the activity, if the
             // fragment is attached to one) that an item has been selected.
-            mListener.onFragmentInteraction(position);
+            String tag = mHashtags.get(position);
+            mListener.onFragmentInteraction(tag);
         }
     }
 
     public interface OnFragmentInteractionListener {
-        public void onFragmentInteraction(int position);
+        public void onFragmentInteraction(String tag);
     }
 
     public class GetTags extends AsyncTask<String, Void, Boolean>
@@ -135,8 +139,9 @@ public class HashtagsFragment extends ListFragment {
 
             // Cleanup string and split it
             String postText = Html.fromHtml(postWithTags.getBody()).toString();
+            postText = postText.replace("\n", "");
 
-            List<String> hashtagsList = Arrays.asList(postText.split(", "));
+            List<String> hashtagsList = Arrays.asList(postText.split(","));
             mHashtags.addAll(hashtagsList);
             return true;
         }
@@ -146,11 +151,21 @@ public class HashtagsFragment extends ListFragment {
         {
             super.onPostExecute(success);
             progressDialog.dismiss();
+
             if(success)
             {
                 hashtagsAdapter.notifyDataSetChanged();
             } else {
-                // TODO: message in case of failure
+                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                builder.setMessage(R.string.dialog_message)
+                        .setTitle(R.string.dialog_title).setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+
+                    }
+                });
+                AlertDialog dialog = builder.create();
+                dialog.show();
             }
         }
     }

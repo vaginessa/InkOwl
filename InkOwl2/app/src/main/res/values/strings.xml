@@ -4,5 +4,9 @@
     <string name="tattoo_">Tattoo</string>
     <string name="action_settings">Settings</string>
     <string name="loading">Loading...</string>
-    <string name="loading_message">Wait while we load the tattoo\'\s hashtags</string>
+    <string name="loading_message">Wait while we load the tattoo\'s hashtags</string>
+    <string name="dialog_message">Sorry, we couldn\'t load the tattoo style</string>
+    <string name="dialog_title">Loading error</string>
+    <string name="ok">Ok</string>
+    <string name="empty_list_error">Sorry, we don\'t know why but the we got no tags right now. We hope to resolve this shortly</string>
 </resources>
