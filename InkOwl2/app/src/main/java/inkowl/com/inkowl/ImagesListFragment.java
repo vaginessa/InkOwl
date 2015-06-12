@@ -5,13 +5,16 @@ import android.app.ListFragment;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.res.Resources;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.widget.SwipeRefreshLayout;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 
+import com.quentindommerc.superlistview.OnMoreListener;
+import com.quentindommerc.superlistview.SuperListview;
 import com.tumblr.jumblr.JumblrClient;
-import com.tumblr.jumblr.types.PhotoPost;
 import com.tumblr.jumblr.types.Post;
 
 import java.util.ArrayList;
@@ -28,6 +31,8 @@ public class ImagesListFragment extends ListFragment {
     public static String tag;
     public ArrayList<Post> mPosts;
     private PhotosAdapter mPhotosAdapter;
+    private SuperListview listView;
+    private boolean hasLoadedEverything;
 
     public static ImagesListFragment newInstance(String param1, String param2) {
         ImagesListFragment fragment = new ImagesListFragment();
@@ -46,29 +51,58 @@ public class ImagesListFragment extends ListFragment {
         if (getArguments() != null) {
         }
 
-        mPosts = new ArrayList<Post>();
-        mPhotosAdapter = new PhotosAdapter(getActivity(), mPosts);
 
-        setListAdapter(mPhotosAdapter);
-        new GetImages().execute("");
+        hasLoadedEverything = false;
     }
 
     @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        mPosts = new ArrayList<Post>();
+        mPhotosAdapter = new PhotosAdapter(getActivity(), mPosts);
 
-        getListView().setDivider(new ColorDrawable(Color.BLACK));
-        getListView().setDividerHeight(2);
+        new GetImages().execute("");
+
+        View view = inflater.inflate(R.layout.superlistview_fragment, container, false);
+        listView = (SuperListview) view.findViewById(R.id.list);
+        listView.setAdapter(mPhotosAdapter);
+
+        listView.setRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                new GetImages().execute("");
+                hasLoadedEverything = false;
+            }
+        });
+
+        /**
+         * This starts the request when the users has only 5 more images to check
+         */
+        listView.setupMoreListener(new OnMoreListener() {
+            @Override
+            public void onMoreAsked(int numberOfItems, int numberBeforeMore, int currentItemPosition) {
+                if (!hasLoadedEverything) {
+                    new GetMoreImages().execute(numberOfItems);
+                }
+            }
+        }, 5);
+
+        return view;
     }
 
     public class GetImages extends AsyncTask<String, Void, Boolean> {
         MainActivity activity;
         ProgressDialog progressDialog;
+        JumblrClient client;
 
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
+            mPosts.clear();
+            mPhotosAdapter.notifyDataSetChanged();
+
             activity = (MainActivity) ImagesListFragment.this.getActivity();
+            client = activity.registerOAuth();
+
             Resources resources = activity.getResources();
             progressDialog = new ProgressDialog(activity);
             progressDialog.setTitle(resources.getString(R.string.loading));
@@ -78,13 +112,14 @@ public class ImagesListFragment extends ListFragment {
 
         @Override
         protected Boolean doInBackground(String... strings) {
+            /**
+             * This request brings 20 posts (at the time of this writing)
+             * **/
             Map<String, Object> params = new HashMap<String, Object>();
             params.put("tag", tag);
-//            params.put("limit", 2);
-            JumblrClient client = activity.registerOAuth();
             mPosts.addAll(client.blogPosts(TumblrConfig.tumblrAddress, params));
 
-            return true;
+            return mPosts.size() > 0 ? true : false;
         }
 
         @Override
@@ -108,6 +143,38 @@ public class ImagesListFragment extends ListFragment {
                     dialog.show();
                 }
             }
+        }
+    }
+
+    public class GetMoreImages extends AsyncTask<Integer, Void, Boolean> {
+        JumblrClient client;
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            MainActivity activity = (MainActivity) ImagesListFragment.this.getActivity();
+            client = activity.registerOAuth();
+        }
+
+        @Override
+        protected Boolean doInBackground(Integer... ints) {
+            Map<String, Object> params = new HashMap<String, Object>();
+            params.put("tag", tag);
+            params.put("offset", ints[0]);
+            List<Post> posts = client.blogPosts(TumblrConfig.tumblrAddress, params);
+            mPosts.addAll(posts);
+            return posts.size() > 0 ? true : false;
+        }
+
+        @Override
+        protected void onPostExecute(Boolean aBoolean) {
+            super.onPostExecute(aBoolean);
+            if (aBoolean) {
+                mPhotosAdapter.notifyDataSetChanged();
+            } else {
+                hasLoadedEverything = true;
+            }
+            listView.hideMoreProgress();
         }
     }
 }
