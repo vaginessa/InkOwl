@@ -104,28 +104,19 @@ public class HashtagsFragment extends ListFragment {
 
     public class GetTags extends AsyncTask<String, Void, Boolean>
     {
-        JumblrClient client;
         ProgressDialog progressDialog;
+        MainActivity activity;
 
         @Override
         protected void onPreExecute()
         {
             super.onPreExecute();
-            Activity activity = HashtagsFragment.this.getActivity();
+            activity = (MainActivity) HashtagsFragment.this.getActivity();
             Resources resources = activity.getResources();
             progressDialog = new ProgressDialog(activity);
             progressDialog.setTitle(resources.getString(R.string.loading));
             progressDialog.setMessage(resources.getString(R.string.loading_message));
             progressDialog.show();
-            // Authenticate via OAuth
-            client = new JumblrClient(
-                    TumblrConfig.consumerKey,
-                    TumblrConfig.consumerSectret
-            );
-            client.setToken(
-                    TumblrConfig.token,
-                    TumblrConfig.tokenSecret
-            );
         }
 
         protected Boolean doInBackground(final String... args)
@@ -135,6 +126,7 @@ public class HashtagsFragment extends ListFragment {
             params.put("tag", TumblrConfig.hashtagName);
 
             // Get post with tags that the tumblr will have
+            JumblrClient client = activity.registerOAuth();
             TextPost postWithTags = (TextPost) client.blogPosts(TumblrConfig.tumblrAddress, params).get(0);
 
             // Cleanup string and split it
