@@ -19,7 +19,10 @@ The tag name is the base of the app and the tumblr address is your tumblr.</p>
 tags are inserted separated by commas. 
 
 <p>TO-DO:</p>
-* Have a list with the results from the search for a given tag in the tumblr channel
+* Try to make the app look nice
+* Load more in the "tattoo list"
+* Tablet version with panel fragments
+* Let's try testing our app
 
 ...to be continued
 
