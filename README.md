@@ -24,5 +24,10 @@ tags are inserted separated by commas.
 ...to be continued
 
 
+## License
+
+InkOwl is released under the [MIT License](http://www.opensource.org/licenses/MIT).
+
+
 
 
