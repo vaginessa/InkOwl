@@ -20,7 +20,6 @@ tags are inserted separated by commas.
 
 <p>TO-DO:</p>
 * Try to make the app look nice (We need UI tweaks)
-* Add "About" in the menu options action bar
 * Let's try testing our app
 
 ...to be continued
