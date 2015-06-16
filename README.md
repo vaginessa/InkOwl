@@ -1,7 +1,7 @@
 # InkOwl
 Android App based on a given Tumblr
 
-Initial steps, expect this to be confusing. 
+Initial steps, expect this to be confusing.
 You need to create a TumblrConfig.java file yourself and inclue a few static vars in there.
 
 <pre><code>public static String consumerKey = YOUR_CONSUMER_KEY;
@@ -16,12 +16,11 @@ public static String tumblrAddress = YOUR_TUMBLR_ADDRESS;
 The tag name is the base of the app and the tumblr address is your tumblr.</p>
 
 <p>The tag name is used to filter the posts from the tumblr address of choice and in that post the searchable <br />
-tags are inserted separated by commas. 
+tags are inserted separated by commas.
 
 <p>TO-DO:</p>
-* Try to make the app look nice
-* Load more in the "tattoo list"
-* Tablet version with panel fragments
+* Try to make the app look nice (We need UI tweaks)
+* Add "About" in the menu options action bar
 * Let's try testing our app
 
 ...to be continued

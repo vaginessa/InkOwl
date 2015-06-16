@@ -13,13 +13,24 @@ public class MainActivity extends ActionBarActivity implements HashtagsFragment.
     private static String logTag = "MainActivity";
     private JumblrClient client;
 
+    public static boolean isTablet;
+    private ImagesListFragment fragment;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        isTablet = getResources().getBoolean(R.bool.isTablet);
+
         FragmentTransaction transaction = getFragmentManager().beginTransaction();
         transaction.add(R.id.listcontainer, new HashtagsFragment());
+
+        if (isTablet) {
+            fragment = new ImagesListFragment();
+            transaction.add(R.id.tattooscontainer, fragment);
+        }
+
         transaction.commit();
     }
 
@@ -42,14 +53,16 @@ public class MainActivity extends ActionBarActivity implements HashtagsFragment.
     public void onFragmentInteraction(String tag) {
         Log.i(logTag, "Tag to be searched \"" + tag + "\"");
 
-        FragmentManager manager = getFragmentManager();
+        if (!isTablet) {
+            fragment = new ImagesListFragment();
+            FragmentManager manager = getFragmentManager();
+            FragmentTransaction transaction = manager.beginTransaction();
+            transaction.replace(R.id.listcontainer, fragment);
+            transaction.addToBackStack(null);
+            transaction.commit();
+        }
 
-        ImagesListFragment.tag = tag;
-
-        FragmentTransaction transaction = manager.beginTransaction();
-        transaction.replace(R.id.listcontainer, new ImagesListFragment());
-        transaction.addToBackStack(null);
-        transaction.commit();
+        fragment.setTag(tag);
     }
 
     @Override

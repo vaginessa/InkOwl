@@ -28,7 +28,7 @@ import inkowl.com.inkowl.adapters.PhotosAdapter;
  * Created by filipemarquespereira on 6/11/15.
  */
 public class ImagesListFragment extends ListFragment {
-    public static String tag;
+    public static String mTag;
     public ArrayList<Post> mPosts;
     private PhotosAdapter mPhotosAdapter;
     private SuperListview listView;
@@ -60,8 +60,9 @@ public class ImagesListFragment extends ListFragment {
         mPosts = new ArrayList<Post>();
         mPhotosAdapter = new PhotosAdapter(getActivity(), mPosts);
 
-        new GetImages().execute("");
-
+        if (!MainActivity.isTablet) {
+            new GetImages().execute("");
+        }
         View view = inflater.inflate(R.layout.superlistview_fragment, container, false);
         listView = (SuperListview) view.findViewById(R.id.list);
         listView.setAdapter(mPhotosAdapter);
@@ -89,6 +90,13 @@ public class ImagesListFragment extends ListFragment {
         return view;
     }
 
+    public void setTag(String tag) {
+        mTag = tag;
+        if (MainActivity.isTablet) {
+            new GetImages().execute("");
+        }
+    }
+
     public class GetImages extends AsyncTask<String, Void, Boolean> {
         MainActivity activity;
         ProgressDialog progressDialog;
@@ -106,7 +114,7 @@ public class ImagesListFragment extends ListFragment {
             Resources resources = activity.getResources();
             progressDialog = new ProgressDialog(activity);
             progressDialog.setTitle(resources.getString(R.string.loading));
-            progressDialog.setMessage(resources.getString(R.string.loading_message_two) + " " + tag +  " " + resources.getString(R.string.tatto_lower));
+            progressDialog.setMessage(resources.getString(R.string.loading_message_two) + " " + mTag +  " " + resources.getString(R.string.tatto_lower));
             progressDialog.show();
         }
 
@@ -116,7 +124,7 @@ public class ImagesListFragment extends ListFragment {
              * This request brings 20 posts (at the time of this writing)
              * **/
             Map<String, Object> params = new HashMap<String, Object>();
-            params.put("tag", tag);
+            params.put("tag", mTag);
             mPosts.addAll(client.blogPosts(TumblrConfig.tumblrAddress, params));
 
             return mPosts.size() > 0 ? true : false;
@@ -159,7 +167,7 @@ public class ImagesListFragment extends ListFragment {
         @Override
         protected Boolean doInBackground(Integer... ints) {
             Map<String, Object> params = new HashMap<String, Object>();
-            params.put("tag", tag);
+            params.put("tag", mTag);
             params.put("offset", ints[0]);
             List<Post> posts = client.blogPosts(TumblrConfig.tumblrAddress, params);
             mPosts.addAll(posts);
