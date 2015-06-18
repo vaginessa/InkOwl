@@ -6,8 +6,10 @@ import android.app.Fragment;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.res.Resources;
+import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
@@ -44,6 +46,8 @@ public class HashtagsListFragment extends Fragment {
     private ArrayList<String> mHashtags;
     private HashtagsAdapter hashtagsAdapter;
 
+    private SwipeRefreshLayout refreshLayout;
+
     public interface OnFragmentInteractionListener {
         public void onFragmentInteraction(String tag);
     }
@@ -60,6 +64,17 @@ public class HashtagsListFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.hashtags_recycler_view_list, container, false);
+
+        refreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_layout);
+        refreshLayout.setColorSchemeColors(Color.RED, Color.GREEN, Color.BLUE, Color.YELLOW);
+        refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                mHashtags.clear();
+                new GetTags().execute("");
+            }
+        });
+
         RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.hashtagsList);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
@@ -139,6 +154,10 @@ public class HashtagsListFragment extends Fragment {
         {
             super.onPostExecute(success);
             progressDialog.dismiss();
+
+            if (refreshLayout.isRefreshing()) {
+                refreshLayout.setRefreshing(false);
+            }
 
             if(success)
             {
