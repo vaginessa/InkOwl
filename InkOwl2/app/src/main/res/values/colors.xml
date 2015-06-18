@@ -10,4 +10,5 @@
     <color name="strong_purple">#6420b4</color>
     <color name="action_bar_color_primary">#000000</color>
     <color name="action_bar_color_primary_dark">#000000</color>
+    <color name="app_color">#6420b4</color>
 </resources>
