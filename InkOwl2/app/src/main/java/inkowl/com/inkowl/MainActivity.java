@@ -1,10 +1,8 @@
 package inkowl.com.inkowl;
 
-import android.app.Activity;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
@@ -12,8 +10,12 @@ import android.view.MenuItem;
 
 import com.tumblr.jumblr.JumblrClient;
 
+import inkowl.com.inkowl.fragments.AboutWebViewFragment;
+import inkowl.com.inkowl.fragments.HashtagsListFragment;
+import inkowl.com.inkowl.fragments.ImagesListFragment;
 
-public class MainActivity extends AppCompatActivity implements HashtagsFragment.OnFragmentInteractionListener {
+
+public class MainActivity extends AppCompatActivity implements HashtagsListFragment.OnFragmentInteractionListener {
     private static String logTag = "MainActivity";
     private JumblrClient client;
 
@@ -28,7 +30,7 @@ public class MainActivity extends AppCompatActivity implements HashtagsFragment.
         isTablet = getResources().getBoolean(R.bool.isTablet);
 
         FragmentTransaction transaction = getFragmentManager().beginTransaction();
-        transaction.add(R.id.listcontainer, new HashtagsFragment());
+        transaction.add(R.id.listcontainer, new HashtagsListFragment());
 
         if (isTablet) {
             fragment = new ImagesListFragment();

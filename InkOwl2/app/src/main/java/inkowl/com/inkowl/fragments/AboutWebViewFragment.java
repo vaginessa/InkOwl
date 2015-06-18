@@ -1,4 +1,4 @@
-package inkowl.com.inkowl;
+package inkowl.com.inkowl.fragments;
 
 import android.app.Activity;
 import android.app.Fragment;

@@ -1,4 +1,4 @@
-package inkowl.com.inkowl;
+package inkowl.com.inkowl.fragments;
 
 import android.app.AlertDialog;
 import android.app.ListFragment;
@@ -22,6 +22,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import inkowl.com.inkowl.MainActivity;
+import inkowl.com.inkowl.R;
+import inkowl.com.inkowl.TumblrConfig;
 import inkowl.com.inkowl.adapters.PhotosAdapter;
 
 /**
