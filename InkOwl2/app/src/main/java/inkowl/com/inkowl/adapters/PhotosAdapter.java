@@ -61,21 +61,13 @@ public class PhotosAdapter extends BaseAdapter {
             view = mInflater.inflate(R.layout.image_item, null);
             holder = new ViewHolder();
             holder.imageView = (ImageView) view.findViewById(R.id.tattooImage);
-            holder.button = (Button) view.findViewById(R.id.sourceButton);
 
             view.setTag(holder);
         } else {
             holder = (ViewHolder) view.getTag();
         }
 
-        final String sourceOriginUrl = Html.fromHtml(post.getCaption()).toString().replace("\n", "");
-        holder.button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Log.i("tag", sourceOriginUrl);
-                openWebPage(sourceOriginUrl);
-            }
-        });
+//        final String sourceOriginUrl = Html.fromHtml(post.getCaption()).toString().replace("\n", "");
 
         Picasso.with(mContext).load(photoUrl).into(holder.imageView);
 
@@ -84,7 +76,6 @@ public class PhotosAdapter extends BaseAdapter {
 
     private static class ViewHolder {
         ImageView imageView;
-        Button button;
     }
 
     private void openWebPage(String sourceOriginUrl) {

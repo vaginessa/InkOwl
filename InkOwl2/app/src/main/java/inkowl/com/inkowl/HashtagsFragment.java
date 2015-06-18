@@ -78,6 +78,7 @@ public class HashtagsFragment extends ListFragment {
 
         getListView().setDivider(new ColorDrawable(Color.BLACK));
         getListView().setDividerHeight(2);
+        getListView().setScrollBarStyle(View.SCROLLBARS_INSIDE_OVERLAY);
     }
 
     @Override
