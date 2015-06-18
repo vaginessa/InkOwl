@@ -62,12 +62,4 @@ public class PhotosAdapter extends RecyclerView.Adapter<PhotosAdapter.PhotoViewH
             imageView = (ImageView) view.findViewById(R.id.tattooImage);
         }
     }
-
-    private void openWebPage(String sourceOriginUrl) {
-        Uri webpage = Uri.parse(sourceOriginUrl);
-        Intent intent = new Intent(Intent.ACTION_VIEW, webpage);
-        if (intent.resolveActivity(mContext.getPackageManager()) != null) {
-            mContext.startActivity(intent);
-        }
-    }
 }
