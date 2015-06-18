@@ -9,18 +9,19 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.tumblr.jumblr.JumblrClient;
+import com.tumblr.jumblr.types.PhotoPost;
 
 import inkowl.com.inkowl.fragments.AboutWebViewFragment;
 import inkowl.com.inkowl.fragments.HashtagsListFragment;
-import inkowl.com.inkowl.fragments.ImagesListFragment;
+import inkowl.com.inkowl.fragments.TattooPhotoListFragment;
 
 
-public class MainActivity extends AppCompatActivity implements HashtagsListFragment.OnFragmentInteractionListener {
-    private static String logTag = "MainActivity";
+public class MainActivity extends AppCompatActivity implements HashtagsListFragment.OnFragmentInteractionListener, TattooPhotoListFragment.OnFragmentInteractionListener {
+    public static String TAG = MainActivity.class.getSimpleName();
     private JumblrClient client;
 
     public static boolean isTablet;
-    private ImagesListFragment fragment;
+    private TattooPhotoListFragment fragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,7 +34,7 @@ public class MainActivity extends AppCompatActivity implements HashtagsListFragm
         transaction.add(R.id.listcontainer, new HashtagsListFragment());
 
         if (isTablet) {
-            fragment = new ImagesListFragment();
+            fragment = new TattooPhotoListFragment();
             transaction.add(R.id.tattooscontainer, fragment);
         }
 
@@ -80,10 +81,10 @@ public class MainActivity extends AppCompatActivity implements HashtagsListFragm
 
     @Override
     public void onFragmentInteraction(String tag) {
-        Log.i(logTag, "Tag to be searched \"" + tag + "\"");
+        Log.i(TAG, "Tag to be searched \"" + tag + "\"");
 
         if (!isTablet) {
-            fragment = new ImagesListFragment();
+            fragment = new TattooPhotoListFragment();
             FragmentManager manager = getFragmentManager();
             FragmentTransaction transaction = manager.beginTransaction();
             transaction.replace(R.id.listcontainer, fragment);
@@ -92,6 +93,12 @@ public class MainActivity extends AppCompatActivity implements HashtagsListFragm
         }
 
         fragment.setTag(tag);
+    }
+
+    @Override
+    public void onFragmentInteraction(PhotoPost post) {
+        Log.i(TAG, post.getPostUrl());
+        // To-Do: implement detail fragment
     }
 
     @Override

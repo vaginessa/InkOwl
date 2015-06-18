@@ -3,13 +3,10 @@ package inkowl.com.inkowl.adapters;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
-import android.text.Html;
-import android.util.Log;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
-import android.widget.Button;
 import android.widget.ImageView;
 
 import com.squareup.picasso.Picasso;
@@ -22,60 +19,48 @@ import java.util.ArrayList;
 import inkowl.com.inkowl.R;
 
 /**
- * Created by filipemarquespereira on 6/11/15.
+ * Created by filipemarquespereira on 6/18/15.
  */
-public class PhotosAdapter extends BaseAdapter {
-    private Context mContext;
+public class PhotosAdapter extends RecyclerView.Adapter<PhotosAdapter.PhotoViewHolder> {
     private ArrayList<Post> mPosts;
-    private LayoutInflater mInflater;
+    private Context mContext;
 
     public PhotosAdapter(Context context, ArrayList<Post> posts) {
         mContext = context;
         mPosts = posts;
-        mInflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
 
     @Override
-    public int getCount() {
-        return mPosts.size();
+    public PhotoViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
+        View itemView = LayoutInflater.
+                from(viewGroup.getContext()).
+                inflate(R.layout.image_item, viewGroup, false);
+
+        return new PhotoViewHolder(itemView);
     }
 
     @Override
-    public PhotoPost getItem(int i) {
-        return (PhotoPost) mPosts.get(i);
-    }
+    public void onBindViewHolder(PhotoViewHolder photoViewHolder, int i) {
+        PhotoPost post = (PhotoPost) mPosts.get(i);
 
-    @Override
-    public long getItemId(int i) {
-        return mPosts.get(i).getId();
-    }
-
-    @Override
-    public View getView(int i, View view, ViewGroup viewGroup) {
-        ViewHolder holder = null;
-        PhotoPost post = getItem(i);
         Photo photo = post.getPhotos().get(0);
         String photoUrl = photo.getOriginalSize().getUrl();
 
-        if (view == null) {
-            view = mInflater.inflate(R.layout.image_item, null);
-            holder = new ViewHolder();
-            holder.imageView = (ImageView) view.findViewById(R.id.tattooImage);
-
-            view.setTag(holder);
-        } else {
-            holder = (ViewHolder) view.getTag();
-        }
-
-//        final String sourceOriginUrl = Html.fromHtml(post.getCaption()).toString().replace("\n", "");
-
-        Picasso.with(mContext).load(photoUrl).into(holder.imageView);
-
-        return view;
+        Picasso.with(mContext).load(photoUrl).into(photoViewHolder.imageView);
     }
 
-    private static class ViewHolder {
-        ImageView imageView;
+    @Override
+    public int getItemCount() {
+        return mPosts.size();
+    }
+
+    public static class PhotoViewHolder extends RecyclerView.ViewHolder {
+        protected ImageView imageView;
+
+        public PhotoViewHolder(View view) {
+            super(view);
+            imageView = (ImageView) view.findViewById(R.id.tattooImage);
+        }
     }
 
     private void openWebPage(String sourceOriginUrl) {
