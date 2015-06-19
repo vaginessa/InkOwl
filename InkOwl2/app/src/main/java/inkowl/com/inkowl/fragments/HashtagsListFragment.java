@@ -28,13 +28,13 @@ import java.util.Map;
 
 import inkowl.com.inkowl.MainActivity;
 import inkowl.com.inkowl.R;
-import inkowl.com.inkowl.helpers.RecyclerItemClickListener;
 import inkowl.com.inkowl.TumblrConfig;
 import inkowl.com.inkowl.adapters.HashtagsAdapter;
+import inkowl.com.inkowl.helpers.RecyclerItemClickListener;
 
 /**
  * Created by filipemarquespereira on 6/18/15.
- *
+ * <p/>
  * A fragment representing a list of hashtags.
  * Activities containing this fragment MUST implement the {@link OnFragmentInteractionListener}
  * interface.
@@ -113,14 +113,12 @@ public class HashtagsListFragment extends Fragment {
         mListener = null;
     }
 
-    public class GetTags extends AsyncTask<String, Void, Boolean>
-    {
+    public class GetTags extends AsyncTask<String, Void, Boolean> {
         ProgressDialog progressDialog;
         MainActivity activity;
 
         @Override
-        protected void onPreExecute()
-        {
+        protected void onPreExecute() {
             super.onPreExecute();
             activity = (MainActivity) HashtagsListFragment.this.getActivity();
             Resources resources = activity.getResources();
@@ -130,8 +128,7 @@ public class HashtagsListFragment extends Fragment {
             progressDialog.show();
         }
 
-        protected Boolean doInBackground(final String... args)
-        {
+        protected Boolean doInBackground(final String... args) {
             // Make the request
             Map<String, Object> params = new HashMap<String, Object>();
             params.put("tag", TumblrConfig.hashtagName);
@@ -150,8 +147,7 @@ public class HashtagsListFragment extends Fragment {
         }
 
         @Override
-        protected void onPostExecute(final Boolean success)
-        {
+        protected void onPostExecute(final Boolean success) {
             super.onPostExecute(success);
             progressDialog.dismiss();
 
@@ -159,8 +155,7 @@ public class HashtagsListFragment extends Fragment {
                 refreshLayout.setRefreshing(false);
             }
 
-            if(success)
-            {
+            if (success) {
                 hashtagsAdapter.notifyDataSetChanged();
             } else {
                 AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());

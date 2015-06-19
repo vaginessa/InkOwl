@@ -142,7 +142,7 @@ public class TattooPhotoListFragment extends Fragment {
             Resources resources = activity.getResources();
             progressDialog = new ProgressDialog(activity);
             progressDialog.setTitle(resources.getString(R.string.loading));
-            progressDialog.setMessage(resources.getString(R.string.loading_message_two) + " " + mTag +  " " + resources.getString(R.string.tatto_lower));
+            progressDialog.setMessage(resources.getString(R.string.loading_message_two) + " " + mTag + " " + resources.getString(R.string.tatto_lower));
             progressDialog.show();
         }
 

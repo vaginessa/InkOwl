@@ -14,7 +14,6 @@ import com.tumblr.jumblr.JumblrClient;
 import com.tumblr.jumblr.types.Photo;
 import com.tumblr.jumblr.types.PhotoPost;
 
-import inkowl.com.inkowl.fragments.AboutWebViewFragment;
 import inkowl.com.inkowl.fragments.HashtagsListFragment;
 import inkowl.com.inkowl.fragments.TattooPhotoListFragment;
 
@@ -60,7 +59,7 @@ public class MainActivity extends AppCompatActivity implements HashtagsListFragm
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_about) {
-            openWebView();
+            openAboutActivity();
             return true;
         }
 
@@ -121,10 +120,7 @@ public class MainActivity extends AppCompatActivity implements HashtagsListFragm
         }
     }
 
-    private void openWebView() {
-        FragmentTransaction transaction = getFragmentManager().beginTransaction();
-        transaction.replace(R.id.listcontainer, new AboutWebViewFragment());
-        transaction.addToBackStack(null);
-        transaction.commit();
+    private void openAboutActivity() {
+        startActivity(new Intent(this, AboutActivity.class));
     }
 }

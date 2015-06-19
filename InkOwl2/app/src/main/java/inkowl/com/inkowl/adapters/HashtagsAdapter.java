@@ -1,6 +1,5 @@
 package inkowl.com.inkowl.adapters;
 
-import android.content.res.Resources;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -34,7 +33,7 @@ public class HashtagsAdapter extends RecyclerView.Adapter<HashtagsAdapter.Hashta
     @Override
     public void onBindViewHolder(HashtagViewHolder hashtagViewHolder, int i) {
         String hashtag = mHashtags.get(i);
-        hashtagViewHolder.hashtagName.setText("#"+hashtag);
+        hashtagViewHolder.hashtagName.setText("#" + hashtag);
     }
 
     @Override
