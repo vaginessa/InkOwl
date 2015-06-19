@@ -50,8 +50,9 @@ public class DetailFragment extends Fragment {
         if (extras != null) {
             if (extras.containsKey(DetailActivity.ARG1)) {
                 photoUrl = extras.getString(DetailActivity.ARG1);
-                //Picasso.with(getActivity()).load(photoUrl).fit().centerCrop().into(tattooImageView);
-                Picasso.with(getActivity()).load(photoUrl).fit().centerInside().into(tattooImageView);
+
+                Picasso.with(getActivity()).load(photoUrl).into(tattooImageView);
+
             }
             if (extras.containsKey(DetailActivity.ARG2)) {
                 sourceUrl = extras.getString(DetailActivity.ARG2);
