@@ -11,7 +11,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -30,7 +29,9 @@ import inkowl.com.inkowl.MainActivity;
 import inkowl.com.inkowl.R;
 import inkowl.com.inkowl.TumblrConfig;
 import inkowl.com.inkowl.adapters.HashtagsAdapter;
+import inkowl.com.inkowl.helpers.RecycleEmptyErrorView;
 import inkowl.com.inkowl.helpers.RecyclerItemClickListener;
+
 
 /**
  * Created by filipemarquespereira on 6/18/15.
@@ -47,6 +48,7 @@ public class HashtagsListFragment extends Fragment {
     private HashtagsAdapter hashtagsAdapter;
 
     private SwipeRefreshLayout refreshLayout;
+    private RecycleEmptyErrorView mRecyclerView;
 
     public interface OnFragmentInteractionListener {
         public void onFragmentInteraction(String tag);
@@ -75,11 +77,12 @@ public class HashtagsListFragment extends Fragment {
             }
         });
 
-        RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.hashtagsList);
-        recyclerView.setHasFixedSize(true);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        recyclerView.setAdapter(hashtagsAdapter);
-        recyclerView.addOnItemTouchListener(
+
+        mRecyclerView = (RecycleEmptyErrorView) view.findViewById(R.id.hashtagsList);
+        mRecyclerView.setHasFixedSize(true);
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        mRecyclerView.setAdapter(hashtagsAdapter);
+        mRecyclerView.addOnItemTouchListener(
                 new RecyclerItemClickListener(getActivity(), new RecyclerItemClickListener.OnItemClickListener() {
                     @Override
                     public void onItemClick(View view, int position) {
@@ -92,6 +95,8 @@ public class HashtagsListFragment extends Fragment {
                     }
                 })
         );
+        mRecyclerView.setEmptyView(view.findViewById(R.id.empty_list_item));
+        mRecyclerView.setErrorView(view.findViewById(R.id.error_list_item));
 
         return view;
     }
@@ -143,6 +148,8 @@ public class HashtagsListFragment extends Fragment {
 
             List<String> hashtagsList = Arrays.asList(postText.split(","));
             mHashtags.addAll(hashtagsList);
+
+            // TO-DO: has to return false under some circumstance
             return true;
         }
 
@@ -158,18 +165,8 @@ public class HashtagsListFragment extends Fragment {
             if (success) {
                 hashtagsAdapter.notifyDataSetChanged();
             } else {
-                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-                builder.setMessage(R.string.dialog_message)
-                        .setTitle(R.string.dialog_title).setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-
-                    }
-                });
-                AlertDialog dialog = builder.create();
-                dialog.show();
+                mRecyclerView.showErrorView();
             }
         }
     }
-
 }

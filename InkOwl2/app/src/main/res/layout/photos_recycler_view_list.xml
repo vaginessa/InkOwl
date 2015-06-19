@@ -1,11 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v4.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/swipe_layout"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/photos_list"
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/swipe_layout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
-</android.support.v4.widget.SwipeRefreshLayout>
+        android:layout_height="match_parent">
+
+        <inkowl.com.inkowl.helpers.RecycleEmptyErrorView
+            android:id="@+id/photos_list"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </android.support.v4.widget.SwipeRefreshLayout>
+
+    <TextView
+        android:id="@+id/empty_list_item"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:text="@string/no_photos" />
+
+    <TextView
+        android:id="@+id/error_list_item"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:text="@string/error_tumblr" />
+</FrameLayout>

@@ -15,4 +15,8 @@
     <string name="check_source_button">SOURCE</string>
     <string name="no_tats_found_message">No tattoo found for this style yet, hang in there</string>
     <string name="no_tats_title">No tattoo yet</string>
+    <string name="no_hashtags">Sorry, no hashtags, mate :(</string>
+    <string name="error_tumblr">We\'ve some network problem and hope to be back shortly</string>
+    <string name="no_photos">We\'ve no photos for this tattoo style yet :(</string>
+
 </resources>

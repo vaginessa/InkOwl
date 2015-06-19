@@ -30,6 +30,7 @@ import inkowl.com.inkowl.R;
 import inkowl.com.inkowl.TumblrConfig;
 import inkowl.com.inkowl.adapters.PhotosAdapter;
 import inkowl.com.inkowl.helpers.EndlessRecyclerOnScrollListener;
+import inkowl.com.inkowl.helpers.RecycleEmptyErrorView;
 import inkowl.com.inkowl.helpers.RecyclerItemClickListener;
 
 /**
@@ -42,6 +43,7 @@ public class TattooPhotoListFragment extends Fragment {
     private PhotosAdapter mPhotosAdapter;
     private boolean hasLoadedEverything;
     private SwipeRefreshLayout refreshLayout;
+    private RecycleEmptyErrorView mRecyclerView;
 
     private OnFragmentInteractionListener mListener;
 
@@ -76,11 +78,11 @@ public class TattooPhotoListFragment extends Fragment {
         });
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
-        RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.photos_list);
-        recyclerView.setHasFixedSize(false);
-        recyclerView.setLayoutManager(linearLayoutManager);
-        recyclerView.setAdapter(mPhotosAdapter);
-        recyclerView.addOnScrollListener(new EndlessRecyclerOnScrollListener(linearLayoutManager) {
+        mRecyclerView = (RecycleEmptyErrorView) view.findViewById(R.id.photos_list);
+        mRecyclerView.setHasFixedSize(false);
+        mRecyclerView.setLayoutManager(linearLayoutManager);
+        mRecyclerView.setAdapter(mPhotosAdapter);
+        mRecyclerView.addOnScrollListener(new EndlessRecyclerOnScrollListener(linearLayoutManager) {
             @Override
             public void onLoadMore(int numberOfItems) {
                 if (!hasLoadedEverything) {
@@ -88,7 +90,7 @@ public class TattooPhotoListFragment extends Fragment {
                 }
             }
         });
-        recyclerView.addOnItemTouchListener(new RecyclerItemClickListener(getActivity(), new RecyclerItemClickListener.OnItemClickListener() {
+        mRecyclerView.addOnItemTouchListener(new RecyclerItemClickListener(getActivity(), new RecyclerItemClickListener.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
                 if (mListener != null) {
@@ -97,6 +99,9 @@ public class TattooPhotoListFragment extends Fragment {
                 }
             }
         }));
+
+        mRecyclerView.setEmptyView(view.findViewById(R.id.empty_list_item));
+        mRecyclerView.setErrorView(view.findViewById(R.id.error_list_item));
 
         return view;
     }
