@@ -30,6 +30,7 @@ import inkowl.com.inkowl.R;
 import inkowl.com.inkowl.TumblrConfig;
 import inkowl.com.inkowl.adapters.PhotosAdapter;
 import inkowl.com.inkowl.helpers.EndlessRecyclerOnScrollListener;
+import inkowl.com.inkowl.helpers.JumblrHelper;
 import inkowl.com.inkowl.helpers.RecycleEmptyErrorView;
 import inkowl.com.inkowl.helpers.RecyclerItemClickListener;
 
@@ -46,14 +47,21 @@ public class TattooPhotoListFragment extends Fragment {
     private RecycleEmptyErrorView mRecyclerView;
 
     private OnFragmentInteractionListener mListener;
+    private OnProgressDialogStateListener mProgressDialogListener;
 
     public interface OnFragmentInteractionListener {
         public void onFragmentInteraction(PhotoPost post);
     }
 
+    public interface OnProgressDialogStateListener {
+        public void onShowProgressDialog(int messageType, String info);
+        public void onDismissProgressDialog();
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         hasLoadedEverything = false;
     }
 
@@ -115,12 +123,20 @@ public class TattooPhotoListFragment extends Fragment {
             throw new ClassCastException(activity.toString()
                     + " must implement OnFragmentInteractionListener");
         }
+
+        try {
+            mProgressDialogListener = (OnProgressDialogStateListener) activity;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(activity.toString() + " must implement OnProgressDialogStateListener");
+        }
     }
 
     @Override
     public void onDetach() {
         super.onDetach();
         mListener = null;
+        mProgressDialogListener.onDismissProgressDialog();
+        mProgressDialogListener = null;
     }
 
     public void setTag(String tag) {
@@ -131,8 +147,6 @@ public class TattooPhotoListFragment extends Fragment {
     }
 
     public class GetImages extends AsyncTask<String, Void, Boolean> {
-        MainActivity activity;
-        ProgressDialog progressDialog;
         JumblrClient client;
 
         @Override
@@ -141,14 +155,11 @@ public class TattooPhotoListFragment extends Fragment {
             mPosts.clear();
             mPhotosAdapter.notifyDataSetChanged();
 
-            activity = (MainActivity) TattooPhotoListFragment.this.getActivity();
-            client = activity.registerOAuth();
+            client = JumblrHelper.getInstance().registerOAuth();
 
-            Resources resources = activity.getResources();
-            progressDialog = new ProgressDialog(activity);
-            progressDialog.setTitle(resources.getString(R.string.loading));
-            progressDialog.setMessage(resources.getString(R.string.loading_message_two) + " " + mTag + " " + resources.getString(R.string.tatto_lower));
-            progressDialog.show();
+            if (mProgressDialogListener != null) {
+                mProgressDialogListener.onShowProgressDialog(1, mTag);
+            }
         }
 
         @Override
@@ -166,27 +177,16 @@ public class TattooPhotoListFragment extends Fragment {
         @Override
         protected void onPostExecute(Boolean aBoolean) {
             super.onPostExecute(aBoolean);
-            progressDialog.dismiss();
+            if (mProgressDialogListener != null) {
+                mProgressDialogListener.onDismissProgressDialog();
+            }
+
             if (refreshLayout.isRefreshing()) {
                 refreshLayout.setRefreshing(false);
             }
 
             if (aBoolean) {
                 mPhotosAdapter.notifyDataSetChanged();
-                if (mPosts.size() == 0) {
-                    AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-                    builder.setMessage(R.string.no_tats_found_message)
-                            .setTitle(R.string.no_tats_title).setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialogInterface, int i) {
-                            if (getFragmentManager().getBackStackEntryCount() > 0) {
-                                getFragmentManager().popBackStack();
-                            }
-                        }
-                    });
-                    AlertDialog dialog = builder.create();
-                    dialog.show();
-                }
             }
         }
     }
@@ -197,8 +197,7 @@ public class TattooPhotoListFragment extends Fragment {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            MainActivity activity = (MainActivity) TattooPhotoListFragment.this.getActivity();
-            client = activity.registerOAuth();
+            client = JumblrHelper.getInstance().registerOAuth();
         }
 
         @Override

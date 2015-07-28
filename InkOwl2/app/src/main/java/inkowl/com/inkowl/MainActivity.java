@@ -2,6 +2,7 @@ package inkowl.com.inkowl;
 
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -10,7 +11,6 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import com.tumblr.jumblr.JumblrClient;
 import com.tumblr.jumblr.types.Photo;
 import com.tumblr.jumblr.types.PhotoPost;
 
@@ -18,12 +18,13 @@ import inkowl.com.inkowl.fragments.HashtagsListFragment;
 import inkowl.com.inkowl.fragments.TattooPhotoListFragment;
 
 
-public class MainActivity extends AppCompatActivity implements HashtagsListFragment.OnFragmentInteractionListener, TattooPhotoListFragment.OnFragmentInteractionListener {
+public class MainActivity extends AppCompatActivity implements HashtagsListFragment.OnFragmentInteractionListener, TattooPhotoListFragment.OnFragmentInteractionListener, HashtagsListFragment.OnProgressDialogStateListener, TattooPhotoListFragment.OnProgressDialogStateListener {
     public static String TAG = MainActivity.class.getSimpleName();
-    private JumblrClient client;
 
     public static boolean isTablet;
     private TattooPhotoListFragment fragment;
+
+    private ProgressDialog progressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,21 +65,6 @@ public class MainActivity extends AppCompatActivity implements HashtagsListFragm
         }
 
         return super.onOptionsItemSelected(item);
-    }
-
-    public JumblrClient registerOAuth() {
-        if (client != null) {
-            return client;
-        }
-        client = new JumblrClient(
-                TumblrConfig.consumerKey,
-                TumblrConfig.consumerSectret
-        );
-        client.setToken(
-                TumblrConfig.token,
-                TumblrConfig.tokenSecret
-        );
-        return client;
     }
 
     @Override
@@ -122,5 +108,23 @@ public class MainActivity extends AppCompatActivity implements HashtagsListFragm
 
     private void openAboutActivity() {
         startActivity(new Intent(this, AboutActivity.class));
+    }
+
+    @Override
+    public void onShowProgressDialog(int messageType, String info) {
+        progressDialog = new ProgressDialog(this);
+        progressDialog.setTitle(getResources().getString(R.string.loading));
+        if (messageType == 0) {
+            progressDialog.setMessage(getResources().getString(R.string.loading_message));
+        } else if (messageType == 1) {
+            progressDialog.setMessage(getResources().getString(R.string.loading_message_two) + " " + info + " " + getResources().getString(R.string.tatto_lower));
+        }
+
+        progressDialog.show();
+    }
+
+    @Override
+    public void onDismissProgressDialog() {
+        progressDialog.dismiss();
     }
 }

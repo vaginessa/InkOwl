@@ -1,11 +1,7 @@
 package inkowl.com.inkowl.fragments;
 
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.app.Fragment;
-import android.app.ProgressDialog;
-import android.content.DialogInterface;
-import android.content.res.Resources;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -25,10 +21,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import inkowl.com.inkowl.MainActivity;
 import inkowl.com.inkowl.R;
 import inkowl.com.inkowl.TumblrConfig;
 import inkowl.com.inkowl.adapters.HashtagsAdapter;
+import inkowl.com.inkowl.helpers.JumblrHelper;
 import inkowl.com.inkowl.helpers.RecycleEmptyErrorView;
 import inkowl.com.inkowl.helpers.RecyclerItemClickListener;
 
@@ -43,6 +39,7 @@ import inkowl.com.inkowl.helpers.RecyclerItemClickListener;
 public class HashtagsListFragment extends Fragment {
 
     private OnFragmentInteractionListener mListener;
+    private OnProgressDialogStateListener mProgressDialogListener;
 
     private ArrayList<String> mHashtags;
     private HashtagsAdapter hashtagsAdapter;
@@ -52,6 +49,11 @@ public class HashtagsListFragment extends Fragment {
 
     public interface OnFragmentInteractionListener {
         public void onFragmentInteraction(String tag);
+    }
+
+    public interface OnProgressDialogStateListener {
+        public void onShowProgressDialog(int messageType, String info);
+        public void onDismissProgressDialog();
     }
 
     @Override
@@ -110,27 +112,28 @@ public class HashtagsListFragment extends Fragment {
             throw new ClassCastException(activity.toString()
                     + " must implement OnFragmentInteractionListener");
         }
+        try {
+            mProgressDialogListener = (OnProgressDialogStateListener) activity;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(activity.toString() + " must implement OnProgressDialogStateListener");
+        }
     }
 
     @Override
     public void onDetach() {
         super.onDetach();
         mListener = null;
+        mProgressDialogListener = null;
     }
 
     public class GetTags extends AsyncTask<String, Void, Boolean> {
-        ProgressDialog progressDialog;
-        MainActivity activity;
 
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            activity = (MainActivity) HashtagsListFragment.this.getActivity();
-            Resources resources = activity.getResources();
-            progressDialog = new ProgressDialog(activity);
-            progressDialog.setTitle(resources.getString(R.string.loading));
-            progressDialog.setMessage(resources.getString(R.string.loading_message));
-            progressDialog.show();
+            if (mProgressDialogListener != null) {
+                mProgressDialogListener.onShowProgressDialog(0, null);
+            }
         }
 
         protected Boolean doInBackground(final String... args) {
@@ -139,7 +142,7 @@ public class HashtagsListFragment extends Fragment {
             params.put("tag", TumblrConfig.hashtagName);
 
             // Get post with tags that the tumblr will have
-            JumblrClient client = activity.registerOAuth();
+            JumblrClient client = JumblrHelper.getInstance().registerOAuth();
             TextPost postWithTags = (TextPost) client.blogPosts(TumblrConfig.tumblrAddress, params).get(0);
 
             // Cleanup string and split it
@@ -156,7 +159,9 @@ public class HashtagsListFragment extends Fragment {
         @Override
         protected void onPostExecute(final Boolean success) {
             super.onPostExecute(success);
-            progressDialog.dismiss();
+            if (mProgressDialogListener != null) {
+                mProgressDialogListener.onDismissProgressDialog();
+            }
 
             if (refreshLayout.isRefreshing()) {
                 refreshLayout.setRefreshing(false);
