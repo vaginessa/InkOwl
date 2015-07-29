@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Ink Owl</string>
+    <string name="detail_fragment_title">Detalhe da Tatuagem</string>
+    <string name="about_fragment_title">Sobre</string>
+    <string name="tattoo_">Tatuagem</string>
+    <string name="action_about">Sobre</string>
+    <string name="loading">Carregando...</string>
+    <string name="loading_message">Aguarde enquanto carregamos as hashtags de tatuagens</string>
+    <string name="loading_message_two">Aguarde enquanto carregamos a</string>
+    <string name="tatto_lower">tatuagem</string>
+    <string name="dialog_message">Desculpe, nós não conseguimos carregar as tatuagens desse estilo</string>
+    <string name="dialog_title">Erro ao carregar</string>
+    <string name="ok">Ok</string>
+    <string name="empty_list_error">Desculpe, não sabemos porque não temos tags agora. Esperamos resolver isso brevemente.</string>
+    <string name="check_source_button">FONTE</string>
+    <string name="no_tats_found_message">Nenhuma tatuagem desse estilo foi encontrada, segura aí!</string>
+    <string name="no_tats_title">Sem tatuagens, por enquanto</string>
+    <string name="no_hashtags">Foi mal, sem hashtags, mano :(</string>
+    <string name="error_tumblr">Nós tivemos algum problema com a rede e esperamos retornar logo</string>
+    <string name="no_photos">Não temos fotos pra esse estilo de tatuagem ainda :(</string>
+    <string name="about">Nós trazemos as melhores tatuagens de cada estilo. Inspire-se!\nSomos dois nerds tatuados e queremos espalhar esse amor pelos rabiscos!</string>
+
+</resources>
