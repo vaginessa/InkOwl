@@ -19,11 +19,9 @@ The tag name is the base of the app and the tumblr address is your tumblr.</p>
 tags are inserted separated by commas.
 
 <p>TO-DO:</p>
-* Try to make the app look nice (We need UI tweaks)
 * Let's try testing our app (unit testing and this sort of thing)
-* Replace ListView with RecyclerView
-* Fix the about(maybe textview with a DialogFragment)
-
+* Add error handling with Jumblr
+* Add support to landscape
 ...to be continued
 
 

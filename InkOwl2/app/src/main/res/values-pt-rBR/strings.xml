@@ -7,8 +7,8 @@
     <string name="action_about">Sobre</string>
     <string name="loading">Carregando...</string>
     <string name="loading_message">Aguarde enquanto carregamos as hashtags de tatuagens</string>
-    <string name="loading_message_two">Aguarde enquanto carregamos a</string>
-    <string name="tatto_lower">tatuagem</string>
+    <string name="loading_message_two">Aguarde enquanto carregamos as tatuagens de </string>
+    <string name="tatto_lower"></string>
     <string name="dialog_message">Desculpe, nós não conseguimos carregar as tatuagens desse estilo</string>
     <string name="dialog_title">Erro ao carregar</string>
     <string name="ok">Ok</string>
