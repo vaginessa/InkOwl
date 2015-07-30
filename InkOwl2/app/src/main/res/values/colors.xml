@@ -8,8 +8,9 @@
     <color name="strong_red">#b02051</color>
     <color name="light_gray">#7d8790</color>
     <color name="strong_purple">#6420b4</color>
-    <color name="action_bar_color_primary">#000000</color>
-    <color name="action_bar_color_primary_dark">#000000</color>
-    <color name="app_color">#27408b</color>
-    <color name="app_foreground_color">#dae2f0</color>
+    <color name="action_bar_color_primary">#424242</color>
+    <color name="action_bar_color_primary_dark">#424242</color>
+    <color name="app_color">#424242</color>
+    <color name="app_foreground_darker__color">#78909C</color>
+    <color name="app_foreground_color">#90A4AE</color>
 </resources>
