@@ -5,12 +5,24 @@ import android.app.FragmentTransaction;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.text.Html;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.Toast;
 
+import com.mikepenz.materialdrawer.Drawer;
+import com.mikepenz.materialdrawer.DrawerBuilder;
+import com.mikepenz.materialdrawer.model.DividerDrawerItem;
+import com.mikepenz.materialdrawer.model.PrimaryDrawerItem;
+import com.mikepenz.materialdrawer.model.SecondaryDrawerItem;
+import com.mikepenz.materialdrawer.model.SectionDrawerItem;
+import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
 import com.tumblr.jumblr.types.Photo;
 import com.tumblr.jumblr.types.PhotoPost;
 
@@ -25,6 +37,8 @@ public class MainActivity extends AppCompatActivity implements HashtagsListFragm
     private TattooPhotoListFragment fragment;
 
     private ProgressDialog progressDialog;
+
+    private Drawer navigationDrawer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,6 +56,40 @@ public class MainActivity extends AppCompatActivity implements HashtagsListFragm
         }
 
         transaction.commit();
+
+        buildDrawer();
+    }
+
+    private void buildDrawer()
+    {
+        navigationDrawer = new DrawerBuilder()
+                .withActivity(this)
+                .withTranslucentNavigationBar(false)
+                .withTranslucentActionBarCompatibility(false)
+                .withTranslucentStatusBar(false)
+                .withActionBarDrawerToggle(true)
+                .withToolbar(new Toolbar(this))
+                .withOnDrawerItemClickListener(navigationDrawerClick)
+        .build();
+
+        getSupportActionBar().setHomeButtonEnabled(false);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+        navigationDrawer.getActionBarDrawerToggle().setDrawerIndicatorEnabled(true);
+
+        buildDrawerItems();
+    }
+
+    private void buildDrawerItems()
+    {
+        navigationDrawer.removeAllItems();
+
+        navigationDrawer.addItem(new PrimaryDrawerItem().withName("Home").withIcon(ContextCompat.getDrawable(this, R.drawable.abc_ic_voice_search_api_mtrl_alpha)));
+
+        navigationDrawer.addItem(new SectionDrawerItem().withName("Tattoo Hashtags"));
+        navigationDrawer.addItem(new PrimaryDrawerItem().withName("Teeeeest 4"));
+        navigationDrawer.addItem(new DividerDrawerItem());
+
+        navigationDrawer.addItem(new SecondaryDrawerItem().withName("About").withIcon(ContextCompat.getDrawable(this, R.drawable.abc_menu_hardkey_panel_mtrl_mult)));
     }
 
     @Override
@@ -127,4 +175,14 @@ public class MainActivity extends AppCompatActivity implements HashtagsListFragm
     public void onDismissProgressDialog() {
         progressDialog.dismiss();
     }
+
+    Drawer.OnDrawerItemClickListener navigationDrawerClick = new Drawer.OnDrawerItemClickListener()
+    {
+        @Override
+        public boolean onItemClick(AdapterView<?> adapterView, View view, int i, long l, IDrawerItem iDrawerItem)
+        {
+            Toast.makeText(MainActivity.this, "I: " + i + " L: " + l, Toast.LENGTH_SHORT).show();
+            return false;
+        }
+    };
 }

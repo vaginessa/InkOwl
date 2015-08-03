@@ -33,4 +33,7 @@ dependencies {
     compile 'com.android.support:recyclerview-v7:22.2.1'
     compile 'com.tumblr:jumblr:0.0.11'
     compile 'com.squareup.picasso:picasso:2.5.2'
+    compile('com.mikepenz:materialdrawer:3.1.2@aar') {
+        transitive = true
+    }
 }

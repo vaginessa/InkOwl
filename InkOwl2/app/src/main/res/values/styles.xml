@@ -1,7 +1,7 @@
 <resources>
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat">
+    <style name="AppTheme" parent="MaterialDrawerTheme.ActionBar">
         <item name="colorPrimary">@color/action_bar_color_primary</item>
         <item name="colorPrimaryDark">@color/action_bar_color_primary_dark</item>
         <item name="android:textColorPrimary">@color/app_foreground_color</item>
