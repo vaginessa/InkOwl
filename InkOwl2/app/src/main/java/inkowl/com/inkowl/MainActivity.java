@@ -33,6 +33,9 @@ import inkowl.com.inkowl.fragments.TattooPhotoListFragment;
 public class MainActivity extends AppCompatActivity implements HashtagsListFragment.OnFragmentInteractionListener, TattooPhotoListFragment.OnFragmentInteractionListener, HashtagsListFragment.OnProgressDialogStateListener, TattooPhotoListFragment.OnProgressDialogStateListener {
     public static String TAG = MainActivity.class.getSimpleName();
 
+    private static final int MENU_HOME = -1;
+    private static final int MENU_ABOUT = -2;
+
     public static boolean isTablet;
     private TattooPhotoListFragment fragment;
 
@@ -83,13 +86,27 @@ public class MainActivity extends AppCompatActivity implements HashtagsListFragm
     {
         navigationDrawer.removeAllItems();
 
-        navigationDrawer.addItem(new PrimaryDrawerItem().withName("Home").withIcon(ContextCompat.getDrawable(this, R.drawable.abc_ic_voice_search_api_mtrl_alpha)));
+        navigationDrawer.addItem(new PrimaryDrawerItem().withName("Home").withIcon(ContextCompat.getDrawable(this, R.drawable.ic_list_white_24dp)).withIdentifier(MENU_HOME));
 
         navigationDrawer.addItem(new SectionDrawerItem().withName("Tattoo Hashtags"));
         navigationDrawer.addItem(new PrimaryDrawerItem().withName("Teeeeest 4"));
         navigationDrawer.addItem(new DividerDrawerItem());
 
-        navigationDrawer.addItem(new SecondaryDrawerItem().withName("About").withIcon(ContextCompat.getDrawable(this, R.drawable.abc_menu_hardkey_panel_mtrl_mult)));
+        navigationDrawer.addItem(new SecondaryDrawerItem().withName("About").withIcon(ContextCompat.getDrawable(this, R.drawable.ic_info_outline_white_24dp)).withIdentifier(MENU_ABOUT));
+    }
+
+    private void clickMenuItem(IDrawerItem iDrawerItem)
+    {
+        switch (iDrawerItem.getIdentifier())
+        {
+            case MENU_HOME:
+                break;
+            case MENU_ABOUT:
+                openAboutActivity();
+                break;
+            default:
+                break;
+        }
     }
 
     @Override
@@ -116,7 +133,8 @@ public class MainActivity extends AppCompatActivity implements HashtagsListFragm
     }
 
     @Override
-    public void onFragmentInteraction(String tag) {
+    public void onFragmentInteraction(String tag)
+    {
         Log.i(TAG, "Tag to be searched \"" + tag + "\"");
 
         if (!isTablet) {
@@ -132,7 +150,8 @@ public class MainActivity extends AppCompatActivity implements HashtagsListFragm
     }
 
     @Override
-    public void onFragmentInteraction(PhotoPost post) {
+    public void onFragmentInteraction(PhotoPost post)
+    {
         Log.i(TAG, post.getPostUrl());
 
         Photo photo = post.getPhotos().get(0);
@@ -181,7 +200,7 @@ public class MainActivity extends AppCompatActivity implements HashtagsListFragm
         @Override
         public boolean onItemClick(AdapterView<?> adapterView, View view, int i, long l, IDrawerItem iDrawerItem)
         {
-            Toast.makeText(MainActivity.this, "I: " + i + " L: " + l, Toast.LENGTH_SHORT).show();
+            clickMenuItem(iDrawerItem);
             return false;
         }
     };
