@@ -15,15 +15,16 @@ import com.tumblr.jumblr.types.Post;
 import java.util.ArrayList;
 
 import inkowl.com.inkowl.R;
+import inkowl.com.inkowl.models.TattooPost;
 
 /**
  * Created by filipemarquespereira on 6/18/15.
  */
 public class PhotosAdapter extends RecyclerView.Adapter<PhotosAdapter.PhotoViewHolder> {
-    private ArrayList<Post> mPosts;
+    private ArrayList<TattooPost> mPosts;
     private Context mContext;
 
-    public PhotosAdapter(Context context, ArrayList<Post> posts) {
+    public PhotosAdapter(Context context, ArrayList<TattooPost> posts) {
         mContext = context;
         mPosts = posts;
     }
@@ -39,12 +40,8 @@ public class PhotosAdapter extends RecyclerView.Adapter<PhotosAdapter.PhotoViewH
 
     @Override
     public void onBindViewHolder(PhotoViewHolder photoViewHolder, int i) {
-        PhotoPost post = (PhotoPost) mPosts.get(i);
-
-        Photo photo = post.getPhotos().get(0);
-        String photoUrl = photo.getOriginalSize().getUrl();
-
-        Picasso.with(mContext).load(photoUrl).into(photoViewHolder.imageView);
+        TattooPost post = mPosts.get(i);
+        Picasso.with(mContext).load(post.getPhotoUrl()).into(photoViewHolder.imageView);
     }
 
     @Override

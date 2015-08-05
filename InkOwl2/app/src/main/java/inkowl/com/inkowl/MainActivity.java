@@ -6,16 +6,13 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.text.Html;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import com.tumblr.jumblr.types.Photo;
-import com.tumblr.jumblr.types.PhotoPost;
-
 import inkowl.com.inkowl.fragments.HashtagsListFragment;
 import inkowl.com.inkowl.fragments.TattooPhotoListFragment;
+import inkowl.com.inkowl.models.TattooPost;
 
 
 public class MainActivity extends AppCompatActivity implements HashtagsListFragment.OnFragmentInteractionListener, TattooPhotoListFragment.OnFragmentInteractionListener, HashtagsListFragment.OnProgressDialogStateListener, TattooPhotoListFragment.OnProgressDialogStateListener {
@@ -84,16 +81,12 @@ public class MainActivity extends AppCompatActivity implements HashtagsListFragm
     }
 
     @Override
-    public void onFragmentInteraction(PhotoPost post) {
+    public void onFragmentInteraction(TattooPost post) {
         Log.i(TAG, post.getPostUrl());
 
-        Photo photo = post.getPhotos().get(0);
-        String photoUrl = photo.getOriginalSize().getUrl();
-        String sourceOriginUrl = Html.fromHtml(post.getCaption()).toString().replace("\n", "");
-
         Intent intent = new Intent(this, DetailActivity.class);
-        intent.putExtra(DetailActivity.ARG1, photoUrl);
-        intent.putExtra(DetailActivity.ARG2, sourceOriginUrl);
+        intent.putExtra(DetailActivity.ARG1, post.getPhotoUrl());
+        intent.putExtra(DetailActivity.ARG2, post.getSourceUrl());
         startActivity(intent);
     }
 
