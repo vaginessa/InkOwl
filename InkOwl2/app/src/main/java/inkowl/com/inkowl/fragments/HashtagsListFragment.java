@@ -27,6 +27,7 @@ import inkowl.com.inkowl.adapters.HashtagsAdapter;
 import inkowl.com.inkowl.helpers.JumblrHelper;
 import inkowl.com.inkowl.helpers.RecycleEmptyErrorView;
 import inkowl.com.inkowl.helpers.RecyclerItemClickListener;
+import inkowl.com.inkowl.models.DataManager;
 
 
 /**
@@ -56,13 +57,19 @@ public class HashtagsListFragment extends Fragment {
         public void onDismissProgressDialog();
     }
 
+    private DataManager dataManager
+            ;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        dataManager = new DataManager(getActivity());
         mHashtags = new ArrayList<String>();
+        mHashtags.addAll(dataManager.restoreHashtags());
         hashtagsAdapter = new HashtagsAdapter(mHashtags);
-        new GetTags().execute("");
+        if (JumblrHelper.hasConnection(getActivity())) {
+            new GetTags().execute("");
+        }
     }
 
     @Override
@@ -74,8 +81,12 @@ public class HashtagsListFragment extends Fragment {
         refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                mHashtags.clear();
-                new GetTags().execute("");
+                if (JumblrHelper.hasConnection(getActivity())) {
+                    mHashtags.clear();
+                    new GetTags().execute("");
+                } else {
+                    refreshLayout.setRefreshing(false);
+                }
             }
         });
 
@@ -151,6 +162,7 @@ public class HashtagsListFragment extends Fragment {
 
             List<String> hashtagsList = Arrays.asList(postText.split(","));
             mHashtags.addAll(hashtagsList);
+            dataManager.saveHashtags(mHashtags);
 
             // TO-DO: has to return false under some circumstance
             return true;

@@ -23,6 +23,7 @@ public class DataManager {
     private Gson gson;
     private Context context;
     private static String fileextension = ".json";
+    private static String hashtagsFilename = "hashtags";
 
     public DataManager(Context context) {
         gson  = new Gson();
@@ -49,6 +50,31 @@ public class DataManager {
         saveJson(json, hashtag);
     }
 
+    public ArrayList<TattooPost> restorePosts(String hashtag) {
+        ArrayList<TattooPost> retVal;
+        Type arrayListType = new TypeToken<ArrayList<TattooPost>>(){}.getType();
+        retVal = gson.fromJson(restoreJson(hashtag), arrayListType);
+        if (retVal == null) {
+            retVal = new ArrayList<>();
+        }
+        return retVal;
+    }
+
+    public void saveHashtags(ArrayList<String> hashtags) {
+        String json = gson.toJson(hashtags);
+        saveJson(json, hashtagsFilename);
+    }
+
+    public ArrayList<String> restoreHashtags() {
+        ArrayList<String> retVal;
+        Type arrayListType = new TypeToken<ArrayList<String>>(){}.getType();
+        retVal = gson.fromJson(restoreJson(hashtagsFilename), arrayListType);
+        if (retVal == null) {
+            retVal = new ArrayList<>();
+        }
+        return retVal;
+    }
+
     private void saveJson(String json, String filename) {
         FileOutputStream outputStream;
 
@@ -61,23 +87,13 @@ public class DataManager {
         }
     }
 
-    public ArrayList<TattooPost> restorePosts(String hashtag) {
-        ArrayList<TattooPost> retVal;
-        Type arrayListType = new TypeToken<ArrayList<TattooPost>>(){}.getType();
-        retVal = gson.fromJson(restoreJson(hashtag), arrayListType);
-        if (retVal == null) {
-            retVal = new ArrayList<>();
-        }
-        return retVal;
-    }
-
-    private String restoreJson(String hashtag) {
+    private String restoreJson(String filename) {
         String retVal = "";
-        String hashtagFilename = hashtag+fileextension;
-        for (String filename : context.fileList()) {
-            if (filename.equals(hashtagFilename)) {
+        String completeFilename = filename+fileextension;
+        for (String localFilename : context.fileList()) {
+            if (localFilename.equals(completeFilename)) {
                 try {
-                    FileInputStream fis = context.openFileInput(filename);
+                    FileInputStream fis = context.openFileInput(localFilename);
 
                     StringBuffer fileContent = new StringBuffer("");
                     int n;
