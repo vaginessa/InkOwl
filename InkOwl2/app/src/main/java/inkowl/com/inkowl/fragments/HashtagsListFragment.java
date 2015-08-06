@@ -145,6 +145,7 @@ public class HashtagsListFragment extends Fragment {
             if (mProgressDialogListener != null) {
                 mProgressDialogListener.onShowProgressDialog(0, null);
             }
+            mHashtags.clear();
         }
 
         protected Boolean doInBackground(final String... args) {
