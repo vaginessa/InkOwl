@@ -61,17 +61,20 @@ public class TattooPhotoListFragment extends Fragment {
         super.onCreate(savedInstanceState);
 
         hasLoadedEverything = false;
-        dataManager = new DataManager();
+        dataManager = new DataManager(getActivity());
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.photos_recycler_view_list, container, false);
-        mPosts = new ArrayList<TattooPost>();
+        mPosts = new ArrayList<>();
+        if (mTag != null) {
+            mPosts.addAll(dataManager.restorePosts(mTag));
+        }
 
         mPhotosAdapter = new PhotosAdapter(getActivity(), mPosts);
 
-        if (!MainActivity.isTablet) {
+        if (!MainActivity.isTablet && JumblrHelper.hasConnection(getActivity())) {
             new GetImages().execute("");
         }
 
@@ -80,8 +83,13 @@ public class TattooPhotoListFragment extends Fragment {
         refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                new GetImages().execute("");
-                hasLoadedEverything = false;
+                if (JumblrHelper.hasConnection(getActivity())) {
+                    new GetImages().execute("");
+                    hasLoadedEverything = false;
+                } else {
+                    refreshLayout.setRefreshing(false);
+                    hasLoadedEverything = true;
+                }
             }
         });
 
@@ -93,8 +101,10 @@ public class TattooPhotoListFragment extends Fragment {
         mRecyclerView.addOnScrollListener(new EndlessRecyclerOnScrollListener(linearLayoutManager) {
             @Override
             public void onLoadMore(int numberOfItems) {
-                if (!hasLoadedEverything) {
+                if (!hasLoadedEverything && JumblrHelper.hasConnection(getActivity())) {
                     new GetMoreImages().execute(numberOfItems);
+                } else {
+                    hasLoadedEverything = true;
                 }
             }
         });
@@ -140,7 +150,7 @@ public class TattooPhotoListFragment extends Fragment {
 
     public void setTag(String tag) {
         mTag = tag;
-        if (MainActivity.isTablet) {
+        if (MainActivity.isTablet && JumblrHelper.hasConnection(getActivity())) {
             new GetImages().execute("");
         }
     }
@@ -170,6 +180,7 @@ public class TattooPhotoListFragment extends Fragment {
             params.put("tag", mTag);
             List<Post> posts = client.blogPosts(TumblrConfig.tumblrAddress, params);
             mPosts.addAll(dataManager.parsePosts(posts));
+            dataManager.savePosts(mPosts, mTag);
 
             return mPosts.size() > 0 ? true : false;
         }
@@ -207,6 +218,7 @@ public class TattooPhotoListFragment extends Fragment {
             params.put("offset", ints[0]);
             List<Post> posts = client.blogPosts(TumblrConfig.tumblrAddress, params);
             mPosts.addAll(dataManager.parsePosts(posts));
+            dataManager.savePosts(mPosts, mTag);
             return posts.size() > 0 ? true : false;
         }
 

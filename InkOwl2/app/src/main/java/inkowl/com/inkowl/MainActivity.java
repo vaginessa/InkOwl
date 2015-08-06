@@ -10,6 +10,8 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.squareup.picasso.Picasso;
+
 import inkowl.com.inkowl.fragments.HashtagsListFragment;
 import inkowl.com.inkowl.fragments.TattooPhotoListFragment;
 import inkowl.com.inkowl.models.TattooPost;
@@ -39,6 +41,9 @@ public class MainActivity extends AppCompatActivity implements HashtagsListFragm
         }
 
         transaction.commit();
+        if (BuildConfig.DEBUG) {
+            Picasso.with(this).setIndicatorsEnabled(true);
+        }
     }
 
     @Override

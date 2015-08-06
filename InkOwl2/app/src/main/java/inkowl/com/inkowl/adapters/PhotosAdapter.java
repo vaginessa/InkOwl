@@ -8,9 +8,6 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.squareup.picasso.Picasso;
-import com.tumblr.jumblr.types.Photo;
-import com.tumblr.jumblr.types.PhotoPost;
-import com.tumblr.jumblr.types.Post;
 
 import java.util.ArrayList;
 
