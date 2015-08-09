@@ -2,16 +2,19 @@ package inkowl.com.inkowl.adapters;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
 import inkowl.com.inkowl.R;
+import inkowl.com.inkowl.helpers.SquareImageView;
 import inkowl.com.inkowl.models.TattooPost;
 
 /**
@@ -47,11 +50,11 @@ public class PhotosAdapter extends RecyclerView.Adapter<PhotosAdapter.PhotoViewH
     }
 
     public static class PhotoViewHolder extends RecyclerView.ViewHolder {
-        protected ImageView imageView;
+        protected SquareImageView imageView;
 
         public PhotoViewHolder(View view) {
             super(view);
-            imageView = (ImageView) view.findViewById(R.id.tattooImage);
+            imageView = (SquareImageView) view.findViewById(R.id.tattooImage);
         }
     }
 }
