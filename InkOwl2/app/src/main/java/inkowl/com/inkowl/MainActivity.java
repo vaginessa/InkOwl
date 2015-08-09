@@ -123,6 +123,8 @@ public class MainActivity extends AppCompatActivity implements HashtagsListFragm
 
     @Override
     public void onDismissProgressDialog() {
-        progressDialog.dismiss();
+        if (progressDialog != null) {
+            progressDialog.dismiss();
+        }
     }
 }
