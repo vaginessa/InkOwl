@@ -20,5 +20,6 @@
     <string name="error_tumblr">Nós tivemos algum problema com a rede e esperamos retornar logo</string>
     <string name="no_photos">Não temos fotos pra esse estilo de tatuagem ainda :(</string>
     <string name="about">Nós trazemos as melhores tatuagens de cada estilo. Inspire-se!\nSomos dois nerds tatuados e queremos espalhar esse amor pelos rabiscos!</string>
-
+    <string name="share">compartilhar</string>
+    <string name="share_txt">Ei, olha o que eu achei usando o InkOwl</string>
 </resources>

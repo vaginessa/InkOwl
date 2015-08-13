@@ -8,7 +8,7 @@
     android:layout_marginBottom="10dp"
     android:orientation="vertical">
 
-    <ImageView
+    <inkowl.com.inkowl.helpers.SquareImageView
         android:id="@+id/tattooImage"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

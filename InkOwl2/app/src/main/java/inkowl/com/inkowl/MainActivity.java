@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
+
 import android.support.v7.widget.Toolbar;
 import android.text.Html;
 import android.util.Log;
@@ -26,8 +27,15 @@ import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
 import com.tumblr.jumblr.types.Photo;
 import com.tumblr.jumblr.types.PhotoPost;
 
+import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
+
+import com.squareup.picasso.Picasso;
+
 import inkowl.com.inkowl.fragments.HashtagsListFragment;
 import inkowl.com.inkowl.fragments.TattooPhotoListFragment;
+import inkowl.com.inkowl.models.TattooPost;
 
 
 public class MainActivity extends AppCompatActivity implements HashtagsListFragment.OnFragmentInteractionListener, TattooPhotoListFragment.OnFragmentInteractionListener, HashtagsListFragment.OnProgressDialogStateListener, TattooPhotoListFragment.OnProgressDialogStateListener {
@@ -59,6 +67,9 @@ public class MainActivity extends AppCompatActivity implements HashtagsListFragm
         }
 
         transaction.commit();
+		if (BuildConfig.DEBUG) {
+            Picasso.with(this).setIndicatorsEnabled(true);
+        }
 
         buildDrawer();
     }
@@ -150,17 +161,12 @@ public class MainActivity extends AppCompatActivity implements HashtagsListFragm
     }
 
     @Override
-    public void onFragmentInteraction(PhotoPost post)
-    {
+    public void onFragmentInteraction(TattooPost post) {
         Log.i(TAG, post.getPostUrl());
 
-        Photo photo = post.getPhotos().get(0);
-        String photoUrl = photo.getOriginalSize().getUrl();
-        String sourceOriginUrl = Html.fromHtml(post.getCaption()).toString().replace("\n", "");
-
         Intent intent = new Intent(this, DetailActivity.class);
-        intent.putExtra(DetailActivity.ARG1, photoUrl);
-        intent.putExtra(DetailActivity.ARG2, sourceOriginUrl);
+        intent.putExtra(DetailActivity.ARG1, post.getPhotoUrl());
+        intent.putExtra(DetailActivity.ARG2, post.getSourceUrl());
         startActivity(intent);
     }
 
@@ -192,7 +198,9 @@ public class MainActivity extends AppCompatActivity implements HashtagsListFragm
 
     @Override
     public void onDismissProgressDialog() {
-        progressDialog.dismiss();
+        if (progressDialog != null) {
+            progressDialog.dismiss();
+        }
     }
 
     Drawer.OnDrawerItemClickListener navigationDrawerClick = new Drawer.OnDrawerItemClickListener()
