@@ -28,6 +28,7 @@ import inkowl.com.inkowl.helpers.JumblrHelper;
 import inkowl.com.inkowl.helpers.RecycleEmptyErrorView;
 import inkowl.com.inkowl.helpers.RecyclerItemClickListener;
 import inkowl.com.inkowl.models.DataManager;
+import inkowl.com.inkowl.models.TattooData;
 import inkowl.com.inkowl.models.TattooPost;
 
 /**
@@ -54,14 +55,11 @@ public class TattooPhotoListFragment extends Fragment {
         public void onDismissProgressDialog();
     }
 
-    private DataManager dataManager;
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         hasLoadedEverything = false;
-        dataManager = new DataManager(getActivity());
     }
 
     @Override
@@ -69,7 +67,7 @@ public class TattooPhotoListFragment extends Fragment {
         View view = inflater.inflate(R.layout.photos_recycler_view_list, container, false);
         mPosts = new ArrayList<>();
         if (mTag != null) {
-            mPosts.addAll(dataManager.restorePosts(mTag));
+            mPosts.addAll(TattooData.getInstance().getDataManager().restorePosts(mTag));
         }
 
         mPhotosAdapter = new PhotosAdapter(getActivity(), mPosts);
@@ -179,8 +177,8 @@ public class TattooPhotoListFragment extends Fragment {
             Map<String, Object> params = new HashMap<String, Object>();
             params.put("tag", mTag);
             List<Post> posts = client.blogPosts(TumblrConfig.tumblrAddress, params);
-            mPosts.addAll(dataManager.parsePosts(posts));
-            dataManager.savePosts(mPosts, mTag);
+            mPosts.addAll(TattooData.getInstance().getDataManager().parsePosts(posts));
+            TattooData.getInstance().getDataManager().savePosts(mPosts, mTag);
 
             return mPosts.size() > 0 ? true : false;
         }
@@ -217,8 +215,8 @@ public class TattooPhotoListFragment extends Fragment {
             params.put("tag", mTag);
             params.put("offset", ints[0]);
             List<Post> posts = client.blogPosts(TumblrConfig.tumblrAddress, params);
-            mPosts.addAll(dataManager.parsePosts(posts));
-            dataManager.savePosts(mPosts, mTag);
+            mPosts.addAll(TattooData.getInstance().getDataManager().parsePosts(posts));
+            TattooData.getInstance().getDataManager().savePosts(mPosts, mTag);
             return posts.size() > 0 ? true : false;
         }
 

@@ -28,6 +28,7 @@ import inkowl.com.inkowl.helpers.JumblrHelper;
 import inkowl.com.inkowl.helpers.RecycleEmptyErrorView;
 import inkowl.com.inkowl.helpers.RecyclerItemClickListener;
 import inkowl.com.inkowl.models.DataManager;
+import inkowl.com.inkowl.models.TattooData;
 
 
 /**
@@ -57,15 +58,12 @@ public class HashtagsListFragment extends Fragment {
         public void onDismissProgressDialog();
     }
 
-    private DataManager dataManager
-            ;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        dataManager = new DataManager(getActivity());
         mHashtags = new ArrayList<String>();
-        mHashtags.addAll(dataManager.restoreHashtags());
+        mHashtags.addAll(TattooData.getInstance().getDataManager().restoreHashtags());
         hashtagsAdapter = new HashtagsAdapter(mHashtags);
         if (JumblrHelper.hasConnection(getActivity())) {
             new GetTags().execute("");
@@ -163,7 +161,7 @@ public class HashtagsListFragment extends Fragment {
 
             List<String> hashtagsList = Arrays.asList(postText.split(","));
             mHashtags.addAll(hashtagsList);
-            dataManager.saveHashtags(mHashtags);
+            TattooData.getInstance().getDataManager().saveHashtags(mHashtags);
 
             // TO-DO: has to return false under some circumstance
             return true;

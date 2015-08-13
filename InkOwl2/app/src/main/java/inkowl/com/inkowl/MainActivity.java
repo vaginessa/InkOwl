@@ -9,13 +9,11 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 
 import android.support.v7.widget.Toolbar;
-import android.text.Html;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.Toast;
 
 import com.mikepenz.materialdrawer.Drawer;
 import com.mikepenz.materialdrawer.DrawerBuilder;
@@ -24,17 +22,14 @@ import com.mikepenz.materialdrawer.model.PrimaryDrawerItem;
 import com.mikepenz.materialdrawer.model.SecondaryDrawerItem;
 import com.mikepenz.materialdrawer.model.SectionDrawerItem;
 import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
-import com.tumblr.jumblr.types.Photo;
-import com.tumblr.jumblr.types.PhotoPost;
-
-import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
 
 import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
+
 import inkowl.com.inkowl.fragments.HashtagsListFragment;
 import inkowl.com.inkowl.fragments.TattooPhotoListFragment;
+import inkowl.com.inkowl.models.TattooData;
 import inkowl.com.inkowl.models.TattooPost;
 
 
@@ -55,6 +50,8 @@ public class MainActivity extends AppCompatActivity implements HashtagsListFragm
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        TattooData.getInstance().init(this);
 
         isTablet = getResources().getBoolean(R.bool.isTablet);
 
@@ -100,7 +97,13 @@ public class MainActivity extends AppCompatActivity implements HashtagsListFragm
         navigationDrawer.addItem(new PrimaryDrawerItem().withName("Home").withIcon(ContextCompat.getDrawable(this, R.drawable.ic_list_white_24dp)).withIdentifier(MENU_HOME));
 
         navigationDrawer.addItem(new SectionDrawerItem().withName("Tattoo Hashtags"));
-        navigationDrawer.addItem(new PrimaryDrawerItem().withName("Teeeeest 4"));
+
+        int i = 0;
+        for (String hashtag : TattooData.getInstance().getDataManager().restoreHashtags())
+        {
+            navigationDrawer.addItem(new PrimaryDrawerItem().withName("#" + hashtag).withIdentifier(i++));
+        }
+
         navigationDrawer.addItem(new DividerDrawerItem());
 
         navigationDrawer.addItem(new SecondaryDrawerItem().withName("About").withIcon(ContextCompat.getDrawable(this, R.drawable.ic_info_outline_white_24dp)).withIdentifier(MENU_ABOUT));
@@ -111,12 +114,27 @@ public class MainActivity extends AppCompatActivity implements HashtagsListFragm
         switch (iDrawerItem.getIdentifier())
         {
             case MENU_HOME:
+                openHashTagList();
                 break;
             case MENU_ABOUT:
                 openAboutActivity();
                 break;
             default:
+                ArrayList<String> hashtags = TattooData.getInstance().getDataManager().restoreHashtags();
+                onFragmentInteraction(hashtags.get(iDrawerItem.getIdentifier()));
                 break;
+        }
+    }
+
+    private void openHashTagList()
+    {
+        if (!isTablet) {
+            HashtagsListFragment hashtagFragment = new HashtagsListFragment();
+            FragmentManager manager = getFragmentManager();
+            FragmentTransaction transaction = manager.beginTransaction();
+            transaction.replace(R.id.listcontainer, hashtagFragment);
+            transaction.addToBackStack(null);
+            transaction.commit();
         }
     }
 
