@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.mixpanel.android.mpmetrics.MixpanelAPI;
 import com.tumblr.jumblr.JumblrClient;
 import com.tumblr.jumblr.types.Post;
 
@@ -27,6 +28,7 @@ import inkowl.com.inkowl.helpers.EndlessRecyclerOnScrollListener;
 import inkowl.com.inkowl.helpers.JumblrHelper;
 import inkowl.com.inkowl.helpers.RecycleEmptyErrorView;
 import inkowl.com.inkowl.helpers.RecyclerItemClickListener;
+import inkowl.com.inkowl.helpers.Utils;
 import inkowl.com.inkowl.models.DataManager;
 import inkowl.com.inkowl.models.TattooPost;
 
@@ -41,6 +43,7 @@ public class TattooPhotoListFragment extends Fragment {
     private boolean hasLoadedEverything;
     private SwipeRefreshLayout refreshLayout;
     private RecycleEmptyErrorView mRecyclerView;
+    private MixpanelAPI mixpanel;
 
     private OnFragmentInteractionListener mListener;
     private OnProgressDialogStateListener mProgressDialogListener;
@@ -59,6 +62,9 @@ public class TattooPhotoListFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        mixpanel = MixpanelAPI.getInstance(getActivity(), Utils.projectToken);
+        mixpanel.track(TattooPhotoListFragment.class.getName());
 
         hasLoadedEverything = false;
         dataManager = new DataManager(getActivity());
@@ -157,10 +163,12 @@ public class TattooPhotoListFragment extends Fragment {
 
     public class GetImages extends AsyncTask<String, Void, Boolean> {
         JumblrClient client;
+        private String loadImages = "loadingimages";
 
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
+            mixpanel.timeEvent(loadImages);
             mPosts.clear();
             mPhotosAdapter.notifyDataSetChanged();
 
@@ -188,6 +196,7 @@ public class TattooPhotoListFragment extends Fragment {
         @Override
         protected void onPostExecute(Boolean aBoolean) {
             super.onPostExecute(aBoolean);
+            mixpanel.track(loadImages);
             if (mProgressDialogListener != null) {
                 mProgressDialogListener.onDismissProgressDialog();
             }
@@ -204,10 +213,12 @@ public class TattooPhotoListFragment extends Fragment {
 
     public class GetMoreImages extends AsyncTask<Integer, Void, Boolean> {
         JumblrClient client;
+        private String loadImages = "loadingimages";
 
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
+            mixpanel.timeEvent(loadImages);
             client = JumblrHelper.getInstance().registerOAuth();
         }
 
@@ -225,6 +236,7 @@ public class TattooPhotoListFragment extends Fragment {
         @Override
         protected void onPostExecute(Boolean aBoolean) {
             super.onPostExecute(aBoolean);
+            mixpanel.track(loadImages);
 
             if (aBoolean) {
                 mPhotosAdapter.notifyDataSetChanged();

@@ -10,10 +10,12 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 
+import com.mixpanel.android.mpmetrics.MixpanelAPI;
 import com.squareup.picasso.Picasso;
 
 import inkowl.com.inkowl.DetailActivity;
 import inkowl.com.inkowl.R;
+import inkowl.com.inkowl.helpers.Utils;
 
 public class DetailFragment extends Fragment {
 
@@ -23,6 +25,8 @@ public class DetailFragment extends Fragment {
     private ImageView tattooImageView;
     private Button sourceButton;
 
+    private MixpanelAPI mixpanel;
+
     public DetailFragment() {
         // Required empty public constructor
     }
@@ -30,6 +34,8 @@ public class DetailFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mixpanel = MixpanelAPI.getInstance(getActivity(), Utils.projectToken);
+        mixpanel.track(DetailFragment.class.getName());
     }
 
     @Override
@@ -67,6 +73,7 @@ public class DetailFragment extends Fragment {
     }
 
     private void openWebPage(String sourceOriginUrl) {
+        mixpanel.track("sourcebutton");
         Uri webpage = Uri.parse(sourceOriginUrl);
         Intent intent = new Intent(Intent.ACTION_VIEW, webpage);
         if (intent.resolveActivity(getActivity().getPackageManager()) != null) {
