@@ -94,19 +94,27 @@ public class MainActivity extends AppCompatActivity implements HashtagsListFragm
     {
         navigationDrawer.removeAllItems();
 
-        navigationDrawer.addItem(new PrimaryDrawerItem().withName("Home").withIcon(ContextCompat.getDrawable(this, R.drawable.ic_list_white_24dp)).withIdentifier(MENU_HOME));
+        navigationDrawer.addItem(new PrimaryDrawerItem()
+                .withName(R.string.drawer_home)
+                .withIcon(ContextCompat.getDrawable(this, R.drawable.ic_list_white_24dp))
+                .withIdentifier(MENU_HOME));
 
-        navigationDrawer.addItem(new SectionDrawerItem().withName("Tattoo Hashtags"));
+        navigationDrawer.addItem(new SectionDrawerItem().withName(R.string.drawer_hashtags));
 
         int i = 0;
         for (String hashtag : TattooData.getInstance().getDataManager().restoreHashtags())
         {
-            navigationDrawer.addItem(new PrimaryDrawerItem().withName("#" + hashtag).withIdentifier(i++));
+            navigationDrawer.addItem(new PrimaryDrawerItem()
+                    .withName("#" + hashtag)
+                    .withIdentifier(i++));
         }
 
         navigationDrawer.addItem(new DividerDrawerItem());
 
-        navigationDrawer.addItem(new SecondaryDrawerItem().withName("About").withIcon(ContextCompat.getDrawable(this, R.drawable.ic_info_outline_white_24dp)).withIdentifier(MENU_ABOUT));
+        navigationDrawer.addItem(new SecondaryDrawerItem()
+                .withName(R.string.action_about)
+                .withIcon(ContextCompat.getDrawable(this, R.drawable.ic_info_outline_white_24dp))
+                .withIdentifier(MENU_ABOUT));
     }
 
     private void clickMenuItem(IDrawerItem iDrawerItem)
@@ -120,7 +128,8 @@ public class MainActivity extends AppCompatActivity implements HashtagsListFragm
                 openAboutActivity();
                 break;
             default:
-                ArrayList<String> hashtags = TattooData.getInstance().getDataManager().restoreHashtags();
+                ArrayList<String> hashtags = TattooData.getInstance()
+                        .getDataManager().restoreHashtags();
                 onFragmentInteraction(hashtags.get(iDrawerItem.getIdentifier()));
                 break;
         }

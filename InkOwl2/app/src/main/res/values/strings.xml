@@ -21,4 +21,6 @@
     <string name="about">We bring you the best tattoos for every tattoo style. Get inspired!\nWe are two tattooed nerd dudes that wanna spread the tattoo love!</string>
     <string name="share">share</string>
     <string name="share_txt">Hey, look what I found using InkOwl</string>
+    <string name="drawer_home">Home</string>
+    <string name="drawer_hashtags">Tattoo Hashtags</string>
 </resources>

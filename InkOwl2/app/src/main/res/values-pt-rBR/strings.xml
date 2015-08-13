@@ -22,4 +22,6 @@
     <string name="about">Nós trazemos as melhores tatuagens de cada estilo. Inspire-se!\nSomos dois nerds tatuados e queremos espalhar esse amor pelos rabiscos!</string>
     <string name="share">compartilhar</string>
     <string name="share_txt">Ei, olha o que eu achei usando o InkOwl</string>
+    <string name="drawer_home">Início</string>
+    <string name="drawer_hashtags">Hashtags de Tatuagens</string>
 </resources>
