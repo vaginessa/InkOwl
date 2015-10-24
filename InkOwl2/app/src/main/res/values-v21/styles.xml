@@ -6,5 +6,5 @@
         <item name="android:colorPrimaryDark">@color/action_bar_color_primary_dark</item>
         <item name="android:textColorPrimary">@color/app_foreground_color</item>
     </style>
-
+    <style name="AppThemeFullscreen" parent="Theme.AppCompat.NoActionBar"></style>
 </resources>

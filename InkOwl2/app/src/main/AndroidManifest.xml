@@ -31,6 +31,9 @@
             android:name=".AboutActivity"
             android:label="@string/about_fragment_title"
             android:screenOrientation="portrait"/>
+        <activity android:name=".DetailFullscreenActivity"
+            android:theme="@style/AppThemeFullscreen"
+            android:screenOrientation="portrait"/>
     </application>
 
 </manifest>

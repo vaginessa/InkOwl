@@ -14,6 +14,7 @@ import com.mixpanel.android.mpmetrics.MixpanelAPI;
 import com.squareup.picasso.Picasso;
 
 import inkowl.com.inkowl.DetailActivity;
+import inkowl.com.inkowl.DetailFullscreenActivity;
 import inkowl.com.inkowl.R;
 import inkowl.com.inkowl.helpers.Utils;
 
@@ -59,6 +60,15 @@ public class DetailFragment extends Fragment {
 
                 Picasso.with(getActivity()).load(photoUrl).into(tattooImageView);
 
+                tattooImageView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        mixpanel.track("detailtattoobutton");
+                        DetailFullscreenActivity.imageURL = photoUrl;
+                        Intent intent = new Intent(getActivity(), DetailFullscreenActivity.class);
+                        startActivity(intent);
+                    }
+                });
             }
             if (extras.containsKey(DetailActivity.ARG2)) {
                 sourceUrl = extras.getString(DetailActivity.ARG2);
