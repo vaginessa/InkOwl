@@ -1,6 +1,7 @@
 package inkowl.com.inkowl.adapters;
 
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.support.v7.widget.RecyclerView;
 import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
@@ -41,7 +42,9 @@ public class PhotosAdapter extends RecyclerView.Adapter<PhotosAdapter.PhotoViewH
     @Override
     public void onBindViewHolder(PhotoViewHolder photoViewHolder, int i) {
         TattooPost post = mPosts.get(i);
-        Picasso.with(mContext).load(post.getPhotoUrl()).fit().centerCrop().into(photoViewHolder.imageView);
+        Picasso.with(mContext).load(post.getPhotoUrl()).
+                placeholder(getLoadingImage()).fit().centerCrop().
+                error(getErrorImage()).into(photoViewHolder.imageView);
     }
 
     @Override
@@ -56,5 +59,13 @@ public class PhotosAdapter extends RecyclerView.Adapter<PhotosAdapter.PhotoViewH
             super(view);
             imageView = (SquareImageView) view.findViewById(R.id.tattooImage);
         }
+    }
+
+    private Drawable getErrorImage() {
+        return mContext.getResources().getDrawable(R.drawable.error);
+    }
+
+    private Drawable getLoadingImage() {
+        return mContext.getResources().getDrawable(R.drawable.loading);
     }
 }
