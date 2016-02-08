@@ -43,7 +43,8 @@ public class PhotosAdapter extends RecyclerView.Adapter<PhotosAdapter.PhotoViewH
     public void onBindViewHolder(PhotoViewHolder photoViewHolder, int i) {
         TattooPost post = mPosts.get(i);
         Picasso.with(mContext).load(post.getPhotoUrl()).
-                placeholder(getLoadingImage()).error(getErrorImage()).into(photoViewHolder.imageView);
+                placeholder(getLoadingImage()).fit().centerCrop().
+                error(getErrorImage()).into(photoViewHolder.imageView);
     }
 
     @Override
