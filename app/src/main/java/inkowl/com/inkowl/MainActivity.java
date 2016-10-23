@@ -10,7 +10,6 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import com.mixpanel.android.mpmetrics.MixpanelAPI;
 import com.squareup.picasso.Picasso;
 
 import org.json.JSONException;
@@ -18,7 +17,6 @@ import org.json.JSONObject;
 
 import inkowl.com.inkowl.fragments.HashtagsListFragment;
 import inkowl.com.inkowl.fragments.TattooPhotoListFragment;
-import inkowl.com.inkowl.helpers.Utils;
 import inkowl.com.inkowl.models.TattooPost;
 
 
@@ -30,15 +28,10 @@ public class MainActivity extends AppCompatActivity implements HashtagsListFragm
 
     private ProgressDialog progressDialog;
 
-    private MixpanelAPI mixpanel;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        mixpanel = MixpanelAPI.getInstance(this, Utils.projectToken);
-        mixpanel.track(MainActivity.class.getName());
 
         isTablet = getResources().getBoolean(R.bool.isTablet);
 
@@ -90,7 +83,7 @@ public class MainActivity extends AppCompatActivity implements HashtagsListFragm
             } catch (JSONException e) {
                 e.printStackTrace();
             }
-            mixpanel.track("choose tag", properties);
+
             fragment = new TattooPhotoListFragment();
             FragmentManager manager = getFragmentManager();
             FragmentTransaction transaction = manager.beginTransaction();
@@ -112,7 +105,7 @@ public class MainActivity extends AppCompatActivity implements HashtagsListFragm
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        mixpanel.track("tattoourl", properties);
+
         Intent intent = new Intent(this, DetailActivity.class);
         intent.putExtra(DetailActivity.ARG1, post.getPhotoUrl());
         intent.putExtra(DetailActivity.ARG2, post.getSourceUrl());
@@ -129,7 +122,6 @@ public class MainActivity extends AppCompatActivity implements HashtagsListFragm
     }
 
     private void openAboutActivity() {
-        mixpanel.track("hit open about");
         startActivity(new Intent(this, AboutActivity.class));
     }
 

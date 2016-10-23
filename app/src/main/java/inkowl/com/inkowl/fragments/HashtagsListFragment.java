@@ -12,7 +12,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.mixpanel.android.mpmetrics.MixpanelAPI;
 import com.tumblr.jumblr.JumblrClient;
 import com.tumblr.jumblr.types.TextPost;
 
@@ -28,7 +27,6 @@ import inkowl.com.inkowl.adapters.HashtagsAdapter;
 import inkowl.com.inkowl.helpers.JumblrHelper;
 import inkowl.com.inkowl.helpers.RecycleEmptyErrorView;
 import inkowl.com.inkowl.helpers.RecyclerItemClickListener;
-import inkowl.com.inkowl.helpers.Utils;
 import inkowl.com.inkowl.models.DataManager;
 
 
@@ -60,14 +58,10 @@ public class HashtagsListFragment extends Fragment {
     }
 
     private DataManager dataManager;
-    private MixpanelAPI mixpanel;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        mixpanel = MixpanelAPI.getInstance(getActivity(), Utils.projectToken);
-        mixpanel.track(HashtagsListFragment.class.getName());
 
         dataManager = new DataManager(getActivity());
         mHashtags = new ArrayList<String>();
@@ -144,11 +138,10 @@ public class HashtagsListFragment extends Fragment {
     }
 
     public class GetTags extends AsyncTask<String, Void, Boolean> {
-        private String loadTags = "loadingtags";
+
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            mixpanel.timeEvent(loadTags);
             if (mProgressDialogListener != null) {
                 mProgressDialogListener.onShowProgressDialog(0, null);
             }
@@ -179,7 +172,6 @@ public class HashtagsListFragment extends Fragment {
         @Override
         protected void onPostExecute(final Boolean success) {
             super.onPostExecute(success);
-            mixpanel.track(loadTags);
             if (mProgressDialogListener != null) {
                 mProgressDialogListener.onDismissProgressDialog();
             }
